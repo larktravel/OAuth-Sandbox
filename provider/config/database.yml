@@ -1,0 +1,31 @@
+development:
+  adapter:  postgresql
+  host:     localhost
+  port:     5432
+  encoding: unicode
+  database: api_lark_beta_development
+  pool:     500
+  username: koushik
+  password:
+  template: template0
+
+test:
+  adapter:  postgresql
+  host:     localhost
+  port:     5432
+  encoding: unicode
+  database: api_lark_beta_test
+  pool:     500
+  username: koushik
+  password:
+  template: template0
+
+production:
+  adapter:  postgresql
+  host:     localhost
+  encoding: unicode
+  database: api_lark_beta_production
+  pool:     50
+  username: Adam
+  password:
+  template: template0
