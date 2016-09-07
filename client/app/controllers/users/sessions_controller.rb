@@ -3,9 +3,9 @@ class Users::SessionsController < Devise::SessionsController
 # before_action :configure_sign_in_params, only: [:create]
 
   # GET /resource/sign_in
-  # def new
-  #   super
-  # end
+  def new
+    super
+  end
 
   # POST /resource/sign_in
   def create
@@ -14,10 +14,11 @@ class Users::SessionsController < Devise::SessionsController
     if current_user.access_token.nil?
       puts "login failed going to users/sign_in"
       sign_out
-      redirect_to new_user_session_path
+      redirect_to new_user_session_path, :flash => { :error => "invalid user credentials" }
     else
       puts "login successful going to user_logged_in_path"
-      set_flash_message!(:notice, :signed_in)
+      #set_flash_message!(:notice, :signed_in)
+      flash[:notice] = "yay signed in"
       sign_in(resource_name, resource)
 
       session[:user_id] = current_user.id

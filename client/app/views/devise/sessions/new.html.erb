@@ -24,3 +24,7 @@
 <% end %>
 
 <%= render "devise/shared/links" %>
+
+<% if session[:errors] %>
+  <p> errors be <%= session[:errors] %> </p>
+<% end %>
