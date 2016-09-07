@@ -18,17 +18,25 @@ module Devise
           'client_id' => 'myclient',
           'grant_type' => 'password'
         }
-        byebug
-        puts "doing stuffs heres"
-=begin
-        result = AuthClient.get_oauth_token(params)
-        return false unless result.success?
-        response = JSON.parse(result.response)
-        self.email = authentication_hash[:email]
-        self.auth_token = response['access_token']
-        self.refresh_token = response['refresh_token']
-        self.expires_at = Time.now + response['expires_in']
-=end
+
+        app_id = "a7182a7390490799be6012d0b1ea8309000f836e2e90083eede45d5e449b860c"
+        secret = "bf5a006a14961dca24f364ce38a8b91dd344fb413a259a2432fcf5afe051f12b"
+
+        begin
+          client = OAuth2::Client.new(app_id, secret, site: "http://localhost:7777/")
+          self.access_token = client.password.get_token(params["username"], params["password"])
+          #response = auth_token.get('/dummy_data')
+          self.auth_token = access_token.token
+          self.refresh_token = access_token.refresh_token
+          self.expires_at = Time.now + access_token.expires_in
+        rescue OAuth2::Error => e
+          puts e
+          self.access_token = nil
+          self.auth_token = nil
+          self.refresh_token = nil
+          self.expires_at = nil
+        end
+
         return self
       end
 

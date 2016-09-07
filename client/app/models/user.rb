@@ -1,5 +1,5 @@
 class User
-  attr_accessor :id, :email, :auth_token, :refresh_token, :expires_at
+  attr_accessor :id, :email, :auth_token, :refresh_token, :expires_at, :access_token
   include ActiveModel::Model
 
   include ActiveModel::Validations #required because some before_validations are defined in devise

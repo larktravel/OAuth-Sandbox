@@ -8,7 +8,12 @@ Doorkeeper.configure do
     # Put your resource owner authentication logic here.
     # Example implementation:
     #User.find_by_id(session[:user_id]) || redirect_to(new_user_session_url)
-    User.find_by_id(session[:current_user_id]) || redirect_to(new_user_session_url)
+    #User.find_by_id(session[:current_user_id]) || redirect_to(new_user_session_url)
+    puts "i am in the resource_owner_authenticator block"
+    user = User.find_for_database_authentication(:email => params[:username])
+    if user && user.valid_for_authentication? { user.valid_password?(params[:password]) }
+      user
+    end
   end
 
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
@@ -19,8 +24,19 @@ Doorkeeper.configure do
   # end
 
   resource_owner_from_credentials do |routes|
-    u = User.find_for_database_authentication(:email => params[:username])
-    u if u && u.valid_password?(params[:password])
+    #u = User.find_for_database_authentication(:email => params[:username])
+    #u if u && u.valid_password?(params[:password])
+    puts "i am in the resource_owner_from_credentials block"
+=begin
+    user = User.find_for_database_authentication(:email => params[:username])
+    if user && user.valid_for_authentication? { user.valid_password?(params[:password]) }
+      user
+    end
+=end
+    request.params[:user] = {:email => request.params[:username], :password => request.params[:password]}
+    request.env["warden"].logout(:user)
+    request.env["devise.allow_params_authentication"] = true
+    request.env["warden"].authenticate!(:scope => :user)
   end
 
   # Authorization Code expiration time (default 10 minutes).
